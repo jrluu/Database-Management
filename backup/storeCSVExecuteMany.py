@@ -43,21 +43,18 @@ def FILE_OPEN(file):
 			Sstrings += '%s,'
 		Sstrings += '%s'
 	
-
-		#Make full string
-		insertQuery = "insert into %s (%s) values (%s);" % (fileName, stringOfAttr, Sstrings)
-#		insertQuery+="(%s) VALUES(%s)" % (stringOfAttr, Sstrings)	
-	
 		#Gets the values of each tuple
 		for row in mkWh:
 			parsedRow = []
 			for cell in row:
 				newCell = parse_value(cell)
 				parsedRow.append(newCell)
-#			cur.execute(insertQuery+str(tuple(parsedRow)).strip('[]'))
-			cur.execute(insertQuery,tuple(parsedRow))
+			listOfTuples.append(tuple(parsedRow))
 
-#		number_of_rows = cur.executemany(insertQuery,listOfTuples);	  
+		#Insert into Query
+		insertQuery = "INSERT INTO %s" %fileName
+		insertQuery+="(%s) VALUES(%s)" % (stringOfAttr, Sstrings)
+		number_of_rows = cur.executemany(insertQuery,listOfTuples);	  
 		
 	print 'Successfully inserted into %s!' %fileName
 
@@ -483,20 +480,20 @@ cur = conn.cursor()
 
 #createTableEIA()
 
-createTableHHV()
-#createTableDAY()
+#createTableHHV()
+createTableDAY()
 #createTablePER()
-createTableVEH()
+#createTableVEH()
 
 #FILE_OPEN('EIA_MkWh_2015.csv')
 #FILE_OPEN('EIA_CO2_Transportation_2015.csv')
 #FILE_OPEN('EIA_CO2_Electricity_2015.csv')
 
 #still need to import day, perv, and veh
-FILE_OPEN('HHV2PUB.CSV')
-#FILE_OPEN('DAYV2PUB.CSV')
+#FILE_OPEN('HHV2PUB.CSV')
+FILE_OPEN('DAYV2PUB.CSV')
 #FILE_OPEN('PERV2PUB.CSV')
-FILE_OPEN('VEHV2PUB.CSV')
+#FILE_OPEN('VEHV2PUB.CSV')
 
 
 
