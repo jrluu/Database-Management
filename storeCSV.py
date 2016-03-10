@@ -47,8 +47,7 @@ def FileStoreSlow(file):
 	
 
 		#Make full string
-		insertQuery = "insert into %s (%s) values (%s);" % (fileName, stringOfAttr, Sstrings)
-#		insertQuery+="(%s) VALUES(%s)" % (stringOfAttr, Sstrings)	
+		insertQuery = "insert into %s (%s) values (%s);" % (fileName, stringOfAttr, Sstrings)	
 	
 		#Gets the values of each tuple
 		for row in mkWh:
@@ -56,12 +55,8 @@ def FileStoreSlow(file):
 			for cell in row:
 				newCell = parse_value(cell)
 				parsedRow.append(newCell)
-#			cur.execute(insertQuery+str(tuple(parsedRow)).strip('[]'))
 			cur.execute(insertQuery,tuple(parsedRow))
 
-#		number_of_rows = cur.executemany(insertQuery,listOfTuples);	  
-		
-		
 	print 'Successfully inserted into %s!' %fileName
 
 	
@@ -102,7 +97,6 @@ def FileStoreFast(file):
 		number_of_rows = cur.executemany(insertQuery,listOfTuples);	  
 		
 	print 'Successfully inserted into %s!' %fileName
-	
 	
 	
 def createTableEIA():
@@ -198,7 +192,7 @@ def createTableHHV():
 		PRIMARY KEY(HOUSEID));"""
 		
 	cur.execute(queryString)
-	print "DAYV2PUB Table created successfully"
+	print "HHV2PUB Table created successfully"
 
 	
 def createTableDAY():
@@ -320,7 +314,7 @@ def createTableDAY():
        PRIMARY KEY(HOUSEID,PERSONID,TDTRPNUM));"""
 		
 	cur.execute(queryString)
-	print "HH2V2PUB Table created successfully"
+	print "DAYV2PUB Table created successfully"
 
 	
 def createTablePER():
@@ -518,7 +512,9 @@ def createTableVEH():
 	cur.execute(queryString)
 	print "VEHV2PUB Table created successfully"
 
-	#######MAIN
+
+	#######MAIN##########
+	
 ##Open Connection
 conn = psycopg2.connect("dbname=postgres host = /home/" + os.environ['USER'] + "/postgres ")
 print "Opened database successfully"
@@ -540,11 +536,10 @@ FileStoreSlow('/home/cjnitta/ecs165a/EIA_MkWh_2015.csv')
 FileStoreSlow('/home/cjnitta/ecs165a/EIA_CO2_Transportation_2015.csv')
 FileStoreSlow('/home/cjnitta/ecs165a/EIA_CO2_Electricity_2015.csv')
 
-#still need to import day, perv, and veh
-#FileStoreFast('/home/cjnitta/ecs165a/HHV2PUB.CSV')
-#FileStoreFast('/home/cjnitta/ecs165a/DAYV2PUB.CSV')
-#FileStoreFast('/home/cjnitta/ecs165a/VEHV2PUB.CSV')
-#FileStoreFast('//home/cjnitta/ecs165a/PERV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/HHV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/DAYV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/VEHV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/PERV2PUB.CSV')
 
 
 
