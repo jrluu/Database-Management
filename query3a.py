@@ -7,6 +7,8 @@ import csv
 
 '''
 Author:
+Jonathan Luu, 998315852
+Sandra Delatorre
 
 Problem:
 Calculate the percent of individuals that travel less than 5 -100 miles a day for every 5 mile increments (e.g. 5, 10, 15, ..., 95, 100)
