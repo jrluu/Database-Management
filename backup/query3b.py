@@ -4,6 +4,28 @@ import ast
 import psycopg2
 import os 
 import csv
+
+def calcDays(cur,trip_mile):
+
+	daysInMonth = {"01":31.0,"02":28.0,"03":31.0,"04":30.0,"05":30.0,"06":31.0,"07":30.0,"08":31.0,"09":30.0,"10":31.0,"11":30.0,"12":31.0}
+
+	queryString = r"""
+		SELECT RIGHT(tdaydate,2), TRPMILES, EPATMPG
+		FROM NATURALJOIN  
+		WHERE trpmiles > 0
+		GROUP BY personid, houseid, TDTRPNUM
+		HAVING SUM(trpmiles) < %s;
+		""" % (trip_mile)
+	cur.execute(queryString)	
+	result = cur.fetchall()
+	totalMPG = 0.0
+	total = 0.0
+	for row in result:
+		totalMPG += (daysInMonth[row[0]] * float(row[1]) * float(row[2]))
+		total += (daysInMonth[row[0]] * float(row[1]))
+	result = (totalMPG/total)
+	return result
+	
 	
 def createTempVehTable(cur):
 	cur.execute('''
@@ -25,7 +47,7 @@ def createTempDayTable(cur):
         HOUSEID         CHAR(8),
         PERSONID        CHAR(2),
         TDTRPNUM        CHAR(12),
-        TDAYDATE        INT,
+        TDAYDATE        CHAR(8),
         TRPMILES        DECIMAL(13, 5), 
         VEHID           CHAR(2), 
         PRIMARY KEY(HOUSEID, PERSONID, TDTRPNUM));'''
@@ -45,13 +67,13 @@ def createNaturalJoinTable(cur):
         TDTRPNUM        CHAR(12),
         TRPMILES        DECIMAL(13, 5), 
         EPATMPG         DECIMAL(13, 5),    
-        TDAYDATE        INT,  
+        TDAYDATE        CHAR(8),  
         PRIMARY KEY(HOUSEID, PERSONID, TDTRPNUM));'''
 	)
 	
 	cur.execute("""
 		INSERT INTO NATURALJOIN(HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE)
-		SELECTpsq HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE
+		SELECT HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE
 		FROM VEHTEMP 
 		NATURAL JOIN DAYTEMP;""")	
 	
@@ -65,11 +87,9 @@ def dropTables(cur):
 		
 
 
-		
 def main():
 	daysInMonth = {"01":31,"02":28,"03":31,"04":30,"05":30,"06":31,"07":30,"08":31,"09":30,"10":31,"11":30,"12":31}
 	miles = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
-
 
 	#Calculate the percent of individuals that travel less than 5 -100 miles a day for every 5 mile increments (e.g. 5, 10, 15, ..., 95, 100)
 	conn = psycopg2.connect("dbname=postgres host = /home/" + os.environ['USER'] + "/postgres ")
@@ -79,17 +99,15 @@ def main():
 	cur = conn.cursor()
 	
 	print "creating tables"
-#	createTempVehTable(cur)
-#	createTempDayTable(cur)
-#	createNaturalJoinTable(cur)
-	
-	print "ok"
-	
-	
-	
-#	result = cur.fetchall()
-#	print result
-#	dropTables(cur)
+	createTempVehTable(cur)
+	createTempDayTable(cur)
+	createNaturalJoinTable(cur)
+		
+	for trip_mile in miles:
+		final_result = calcDays(cur,trip_mile)
+		print str(final_result) + " travel < %s miles"% trip_mile
+
+	dropTables(cur)
 
 	conn.commit()
 	print "postgres closed"
