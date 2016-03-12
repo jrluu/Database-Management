@@ -44,6 +44,7 @@ def createTempDayTable(cur):
 	cur.execute('''
 		DROP TABLE IF EXISTS DAYTEMP;
 		CREATE TABLE DAYTEMP(
+		DRIVER			CHAR(2),
         HOUSEID         CHAR(8),
         PERSONID        CHAR(2),
         TDTRPNUM        CHAR(12),
@@ -52,8 +53,8 @@ def createTempDayTable(cur):
         VEHID           CHAR(2), 
         PRIMARY KEY(HOUSEID, PERSONID, TDTRPNUM));'''
 	)
-	cur.execute("""INSERT INTO DAYTEMP(HOUSEID, PERSONID, TDTRPNUM, TDAYDATE, TRPMILES, VEHID) 
-              SELECT HOUSEID, PERSONID, TDTRPNUM, CAST(TDAYDATE AS INT), TRPMILES, VEHID FROM DAYV2PUB;""")
+	cur.execute("""INSERT INTO DAYTEMP(DRIVER, HOUSEID, PERSONID, TDTRPNUM, TDAYDATE, TRPMILES, VEHID) 
+              SELECT DRIVER, HOUSEID, PERSONID, TDTRPNUM, CAST(TDAYDATE AS INT), TRPMILES, VEHID FROM DAYV2PUB;""")
 	
 	
 	
@@ -61,6 +62,7 @@ def createNaturalJoinTable(cur):
 	cur.execute('''
 		DROP TABLE IF EXISTS NATURALJOIN;
 		CREATE TABLE NATURALJOIN(
+		DRIVER			CHAR(2),
         HOUSEID         CHAR(8),
         PERSONID        CHAR(2),
         VEHID           CHAR(2), 
@@ -72,8 +74,8 @@ def createNaturalJoinTable(cur):
 	)
 	
 	cur.execute("""
-		INSERT INTO NATURALJOIN(HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE)
-		SELECT HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE
+		INSERT INTO NATURALJOIN(DRIVER, HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE)
+		SELECT DRIVER, HOUSEID, PERSONID, VEHID, TDTRPNUM, TRPMILES, EPATMPG, TDAYDATE
 		FROM VEHTEMP 
 		NATURAL JOIN DAYTEMP;""")	
 	
@@ -103,11 +105,11 @@ def main():
 	createTempDayTable(cur)
 	createNaturalJoinTable(cur)
 		
-	for trip_mile in miles:
-		final_result = calcDays(cur,trip_mile)
-		print str(final_result) + " travel < %s miles"% trip_mile
+#	for trip_mile in miles:
+#		final_result = calcDays(cur,trip_mile)
+#		print str(final_result) + " travel < %s miles"% trip_mile
 
-	dropTables(cur)
+#	dropTables(cur)
 
 	conn.commit()
 	print "postgres closed"
