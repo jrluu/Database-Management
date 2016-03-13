@@ -17,6 +17,7 @@ month = [200803, 200804,200805,200806,200807,200808,200809,200810,200811,200812,
 
 
 for date in month:	
+
 	#Get Gallons for each month
 	queryString = """			  
 			SELECT SUM(TRPMILES/EPATMPG), COUNT(DISTINCT HOUSEID)
@@ -42,14 +43,14 @@ for date in month:
 	CO2Emission = cur.fetchone()
 
 	#Get the right month for date
-	date = date%100 - 1
+	monthIndex = date%100 - 1
 	
 	#Convert to the right units
 	CO2Emission = CO2Emission[0] * 1000000
 	
-	resultFor3c = (float(gallon) * 0.00887)	* daysInMonth[date]	* (117538000/count)	
+	resultFor3c = (float(gallon) * 0.00887)	* daysInMonth[monthIndex]	* (117538000/count)	
 	resultFor3c = resultFor3c /  float(CO2Emission) * 100
-	print "For %s, the percent of transportation C02 Emissions is %s" %(month[date],resultFor3c) + "%"
+	print "For %s, the percent of transportation C02 Emissions is %s" %(date,resultFor3c) + "%"
 
 
 conn.commit()

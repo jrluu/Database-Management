@@ -527,19 +527,19 @@ cur = conn.cursor()
 
 createTableEIA()
 
-#createTableHHV()
-#createTableDAY()
-#createTablePER()
-#createTableVEH()
+createTableHHV()
+createTableDAY()
+createTablePER()
+createTableVEH()
 
 FileStoreSlow('/home/cjnitta/ecs165a/EIA_MkWh_2015.csv')
 FileStoreSlow('/home/cjnitta/ecs165a/EIA_CO2_Transportation_2015.csv')
 FileStoreSlow('/home/cjnitta/ecs165a/EIA_CO2_Electricity_2015.csv')
 
-#FileStoreFast('/home/cjnitta/ecs165a/HHV2PUB.CSV')
-#FileStoreFast('/home/cjnitta/ecs165a/DAYV2PUB.CSV')
-#FileStoreFast('/home/cjnitta/ecs165a/VEHV2PUB.CSV')
-#FileStoreFast('/home/cjnitta/ecs165a/PERV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/HHV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/DAYV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/VEHV2PUB.CSV')
+FileStoreFast('/home/cjnitta/ecs165a/PERV2PUB.CSV')
 
 
 

@@ -105,11 +105,11 @@ def main():
 	createTempDayTable(cur)
 	createNaturalJoinTable(cur)
 		
-#	for trip_mile in miles:
-#		final_result = calcDays(cur,trip_mile)
-#		print str(final_result) + " travel < %s miles"% trip_mile
+	for trip_mile in miles:
+		final_result = calcDays(cur,trip_mile)
+		print str(final_result) + " travel < %s miles"% trip_mile
 
-#	dropTables(cur)
+	dropTables(cur)
 
 	conn.commit()
 	print "postgres closed"
