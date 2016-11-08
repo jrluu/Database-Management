@@ -14,7 +14,7 @@ Part 3b is the file called query3b.py and takes around 13 minutes to print out t
 
 Part 3c needs the tables created from Part 3b file query3b.py because it refers to the same tables for the natural join. This part takes around 10 seconds to print out the values for the percent of transporttion of CO_2 emissions.
 
-#For More Information
+##For More Information
 
 * [Python 2.7](https://www.python.org/download/releases/2.7/)
 * [PostgreSQL](https://www.postgresql.org/)
@@ -22,5 +22,5 @@ Part 3c needs the tables created from Part 3b file query3b.py because it refers 
 (http://initd.org/psycopg)
 
 
-#Contact
+##Contact
 jrluu@ucdavis.edu
